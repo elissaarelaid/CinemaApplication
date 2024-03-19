@@ -1,8 +1,8 @@
-package net.cinemaApplication.backend.model.movie;
+package net.cinemaApplication.backend.entity.movie;
 
 import jakarta.persistence.*;
 import lombok.*;
-import net.cinemaApplication.backend.model.movieSession.MovieSession;
+import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 
 import java.util.ArrayList;
 import java.util.List;

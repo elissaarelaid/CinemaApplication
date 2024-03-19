@@ -1,4 +1,4 @@
-package net.cinemaApplication.backend;
+package net.cinemaApplication.backend.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

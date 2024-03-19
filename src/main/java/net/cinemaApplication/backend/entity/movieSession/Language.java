@@ -1,4 +1,4 @@
-package net.cinemaApplication.backend.model.movieSession;
+package net.cinemaApplication.backend.entity.movieSession;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package net.cinemaApplication.backend.model.cinemaHall;
+package net.cinemaApplication.backend.entity.cinemaHall;
 
 import jakarta.persistence.*;
 import lombok.*;

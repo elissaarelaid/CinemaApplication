@@ -1,4 +1,4 @@
-package net.cinemaApplication.backend.model.movie;
+package net.cinemaApplication.backend.entity.movie;
 
 import lombok.Getter;
 

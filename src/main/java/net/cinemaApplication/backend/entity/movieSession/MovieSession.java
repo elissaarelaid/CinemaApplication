@@ -1,9 +1,9 @@
-package net.cinemaApplication.backend.model.movieSession;
+package net.cinemaApplication.backend.entity.movieSession;
 
 import jakarta.persistence.*;
 import lombok.*;
-import net.cinemaApplication.backend.model.cinemaHall.CinemaHall;
-import net.cinemaApplication.backend.model.movie.Movie;
+import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
+import net.cinemaApplication.backend.entity.movie.Movie;
 
 import java.time.LocalDateTime;
 
