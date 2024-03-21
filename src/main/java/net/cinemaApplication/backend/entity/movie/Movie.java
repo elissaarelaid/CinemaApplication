@@ -1,5 +1,6 @@
 package net.cinemaApplication.backend.entity.movie;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +39,7 @@ public class Movie {
 
     private String director; //maybe should be an entity
 
+    @JsonIgnore
     @Nullable
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

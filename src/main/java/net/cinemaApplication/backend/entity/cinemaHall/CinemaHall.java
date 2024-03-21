@@ -1,5 +1,6 @@
 package net.cinemaApplication.backend.entity.cinemaHall;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,10 +30,12 @@ public class CinemaHall {
     @Column(name = "seat_columns")
     private int seatColumns;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<MovieSession> sessions = new ArrayList<>();
 
+    @JsonIgnore
     @Nullable
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

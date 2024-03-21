@@ -1,5 +1,6 @@
 package net.cinemaApplication.backend.entity.movieSession;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class MovieSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY) //movie loaded only when needed
     @JoinColumn(name = "movie_id")
     private Movie movie;
@@ -40,6 +42,7 @@ public class MovieSession {
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    @JsonIgnore
     @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_hall_id")

@@ -1,5 +1,6 @@
 package net.cinemaApplication.backend.entity.cinemaHall;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class Seat {
     @Column(name = "is_seat_taken")
     private boolean isSeatTaken;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;
