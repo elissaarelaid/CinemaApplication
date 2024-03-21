@@ -1,12 +1,13 @@
 package net.cinemaApplication.backend.entity.movieSession;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
 import net.cinemaApplication.backend.entity.movie.Movie;
 
 import java.time.LocalDateTime;
-
+//firstly we add moviesession and later hall
 @Setter
 @Getter
 @NoArgsConstructor
@@ -39,6 +40,7 @@ public class MovieSession {
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;

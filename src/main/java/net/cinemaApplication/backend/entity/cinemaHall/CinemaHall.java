@@ -1,12 +1,13 @@
 package net.cinemaApplication.backend.entity.cinemaHall;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//firstly add cinema hall and then seats
 @Setter
 @Getter
 @NoArgsConstructor
@@ -29,8 +30,11 @@ public class CinemaHall {
     private int seatColumns;
 
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     List<MovieSession> sessions = new ArrayList<>();
 
+    @Nullable
     @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     List<Seat> seats = new ArrayList<>();
 }

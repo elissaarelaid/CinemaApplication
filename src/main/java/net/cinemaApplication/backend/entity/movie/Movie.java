@@ -1,12 +1,13 @@
 package net.cinemaApplication.backend.entity.movie;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//firstly we add movie and later moviesessions
 @Setter
 @Getter
 @NoArgsConstructor
@@ -37,6 +38,8 @@ public class Movie {
 
     private String director; //maybe should be an entity
 
+    @Nullable
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     List<MovieSession> sessions = new ArrayList<>();
 }
