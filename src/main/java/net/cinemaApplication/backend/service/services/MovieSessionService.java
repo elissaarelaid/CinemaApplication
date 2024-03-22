@@ -14,6 +14,9 @@ public interface MovieSessionService {
 
     List<MovieSession> getAllMovieSessionsForSpecificDate(LocalDate date);
 
+    //return all movie sessions for one week
+    List<MovieSession> getAllMovieSessionsForAWeek(LocalDate date);
+
     MovieSession updateMovieSession(MovieSession movieSession, Long id);
     void deleteById(Long id);
     Optional<MovieSession> getMovieSessionById(Long id);

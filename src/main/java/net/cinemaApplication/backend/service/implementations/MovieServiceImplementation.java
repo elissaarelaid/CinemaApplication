@@ -131,4 +131,17 @@ public class MovieServiceImplementation implements MovieService {
         assert allMovieSessions != null;
         return allMovieSessions.stream().filter(c -> Objects.equals(c.getSessionDate(), date)).toList();
     }
+
+    @Override //return all movie sessions for a week for a specific movie (it filters according to start date)
+    public List<MovieSession> getMovieSessionsForSpecificMovieAndWeek(LocalDate date, Long id) {
+        LocalDate plusWeek = date.plusDays(7);
+        Optional<Movie> movie = movieRepository.findById(id);
+        if (movie.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        }
+        List<MovieSession> allMovieSessions = movie.get().getSessions();
+        assert allMovieSessions != null;
+        return allMovieSessions.stream().filter(c -> (c.getSessionDate().isAfter(date) || c.getSessionDate().equals(date))
+                && c.getSessionDate().isBefore(plusWeek)).toList();
+    }
 }

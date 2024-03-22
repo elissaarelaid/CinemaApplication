@@ -55,6 +55,13 @@ public class MovieController {
         return movieService.getMovieSessionsForSpecificMovieAndDate(date, id);
     }
 
+    @Operation(summary = "Get all movie sessions for a week")
+    @GetMapping("/movieSessionsWeek/{id}/{date}")
+    public List<MovieSession> getMovieSessionsForAWeek(@PathVariable("date") LocalDate date, @PathVariable("id") Long id)
+    {
+        return movieService.getMovieSessionsForSpecificMovieAndWeek(date, id);
+    }
+
     @Operation(summary = "Add new movie")
     @PostMapping("/add_movie")
     public Movie addMovie(@Valid @RequestBody Movie movie)

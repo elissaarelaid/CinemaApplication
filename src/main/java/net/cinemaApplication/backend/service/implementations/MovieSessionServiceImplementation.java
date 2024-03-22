@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +44,14 @@ public class MovieSessionServiceImplementation implements MovieSessionService {
     public List<MovieSession> getAllMovieSessionsForSpecificDate(LocalDate date) {
         List<MovieSession> allMovieSessions = movieSessionRepository.findAll();
         return allMovieSessions.stream().filter(c -> Objects.equals(c.getSessionDate(), date)).toList();
+    }
+
+    @Override //return all movie sessions for one week
+    public List<MovieSession> getAllMovieSessionsForAWeek(LocalDate date) {
+        List<MovieSession> allMovieSessions = movieSessionRepository.findAll();
+        LocalDate plusWeek = date.plusDays(7);
+        return allMovieSessions.stream().filter(c -> (c.getSessionDate().isAfter(date) || c.getSessionDate().equals(date))
+                && c.getSessionDate().isBefore(plusWeek)).toList();
     }
 
     @Override

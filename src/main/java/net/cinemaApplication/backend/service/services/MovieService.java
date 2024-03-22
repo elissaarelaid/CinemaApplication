@@ -19,4 +19,7 @@ public interface MovieService {
 
     //return all movie sessions for specific date and specific movie (it filters according to start date)
     List<MovieSession> getMovieSessionsForSpecificMovieAndDate(LocalDate date, Long id);
+
+    //return all movie sessions for a week for a specific movie (it filters according to start date)
+    List<MovieSession> getMovieSessionsForSpecificMovieAndWeek(LocalDate date, Long id);
 }

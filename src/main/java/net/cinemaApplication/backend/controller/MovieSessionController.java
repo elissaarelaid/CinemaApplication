@@ -39,10 +39,18 @@ public class MovieSessionController {
 
     @Operation(summary = "Get all movie sessions by specific date")
     @GetMapping("/movieSession/{date}")
-    public List<MovieSession> getMovieSessionById(@PathVariable("date") LocalDate date)
+    public List<MovieSession> getMovieSessionsByDate(@PathVariable("date") LocalDate date)
     {
         return movieSessionService.getAllMovieSessionsForSpecificDate(date);
     }
+
+    @Operation(summary = "Get all movie sessions for a week")
+    @GetMapping("/movieSessionWeek/{date}")
+    public List<MovieSession> getMovieSessionsForAWeek(@PathVariable("date") LocalDate date)
+    {
+        return movieSessionService.getAllMovieSessionsForAWeek(date);
+    }
+
 
     @Operation(summary = "Update a movie session")
     @PutMapping("/updateMovieSession{id}")
