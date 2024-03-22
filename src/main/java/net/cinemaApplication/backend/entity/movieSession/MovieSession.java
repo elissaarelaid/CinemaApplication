@@ -7,7 +7,9 @@ import lombok.*;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
 import net.cinemaApplication.backend.entity.movie.Movie;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 //firstly we add moviesession and later hall
 @Setter
 @Getter
@@ -26,11 +28,14 @@ public class MovieSession {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    @Column(name = "session_date")
+    private LocalDate sessionDate; // The date when the movie session takes place
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Column(name = "start_time")
+    private LocalTime startTime; // Start time of the movie session
+
+    @Column(name = "end_time")
+    private LocalTime endTime; // End time of the movie session
 
     @Column(name = "free_seats")
     private int freeSeats;
@@ -47,4 +52,12 @@ public class MovieSession {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;
+
+    public void calculateEndTime() {
+        if (this.movie != null && this.startTime != null) {
+            int movieLengthInMinutes = this.movie.getMovieLength();
+            this.endTime = this.startTime.plusMinutes(movieLengthInMinutes);
+        }
+    }
+
 }

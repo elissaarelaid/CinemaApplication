@@ -26,7 +26,7 @@ public class Movie {
     private String description;
 
     @Column(name = "movie_length")
-    private double movieLength;
+    private int movieLength; //in minutes
 
     @Enumerated(EnumType.STRING) //has only one genre (maybe should be many to many)
     private Genre genre;
