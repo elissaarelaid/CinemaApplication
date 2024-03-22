@@ -62,6 +62,9 @@ public class MovieSessionServiceImplementation implements MovieSessionService {
         if (movieSession.getSessionDate().isAfter(LocalDate.now())) {
             movieSessionFromDb.setSessionDate(movieSession.getSessionDate());
         }
+        if (movieSession.getMovieSessionPrice() > 0) {
+            movieSessionFromDb.setMovieSessionPrice(movieSession.getMovieSessionPrice());
+        }
         if (Arrays.stream(MovieFormat.values()).noneMatch(c -> c.equals(movieSession.getMovieFormat()))) {
             movieSessionFromDb.setMovieFormat(movieSession.getMovieFormat());
         }

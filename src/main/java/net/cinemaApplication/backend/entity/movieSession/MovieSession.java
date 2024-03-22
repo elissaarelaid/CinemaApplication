@@ -6,9 +6,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
 import net.cinemaApplication.backend.entity.movie.Movie;
+import net.cinemaApplication.backend.entity.user.Ticket;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 //firstly we add moviesession and later hall
 @Setter
@@ -47,11 +50,20 @@ public class MovieSession {
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    @Column(name = "movie_session_price")
+    private int movieSessionPrice;
+
     @JsonIgnore
     @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;
+
+    @JsonIgnore
+    @Nullable
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<Ticket> tickets = new ArrayList<>();
 
     public void calculateEndTime() {
         if (this.movie != null && this.startTime != null) {

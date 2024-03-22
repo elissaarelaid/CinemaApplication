@@ -114,6 +114,9 @@ public class MovieServiceImplementation implements MovieService {
         if (Arrays.stream(Language.values()).noneMatch(c -> c.equals(movieSession.getLanguage()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Language is not correct");
         }
+        if(movieSession.getMovieSessionPrice() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie session price cannot be negative");
+        }
         movieSession.setMovie(movie);
         movie.getSessions().add(movieSession);
         movieSession.calculateEndTime();
