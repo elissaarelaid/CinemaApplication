@@ -3,6 +3,7 @@ package net.cinemaApplication.backend.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.cinemaHall.Seat;
+import net.cinemaApplication.backend.entity.movie.Movie;
 import net.cinemaApplication.backend.service.services.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,18 +37,11 @@ public class SeatController {
         return seat.get();
     }
 
-    @Operation(summary = "Save a seat object")
-    @PostMapping("/save_seat")
-    public Seat saveSeat(@Valid @RequestBody Seat seat)
+    @Operation(summary = "Update seat status when someone purchases a ticket or cancels a ticket")
+    @PutMapping("/updateSeatStatus{id}")
+    public Seat updateSeat(@PathVariable("id") Long id, @Valid @RequestBody boolean status)
     {
-        return seatService.saveSeat(seat);
-    }
-
-    @Operation(summary = "Update a seat")
-    @PutMapping("/updateSeat{id}")
-    public Seat updateSeat(@RequestBody Seat seat, @PathVariable("id") Long id)
-    {
-        return seatService.updateSeat(seat, id);
+        return seatService.updateSeatStatus(id, status);
     }
 
     @Operation(summary = "Delete a seat")

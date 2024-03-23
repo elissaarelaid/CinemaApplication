@@ -5,8 +5,9 @@ import net.cinemaApplication.backend.entity.cinemaHall.Seat;
 import java.util.List;
 
 public interface SeatService {
-    Seat saveSeat(Seat seat);
     List<Seat> getAllSeats();
-    Seat updateSeat(Seat seat, Long id);
+
+    Seat updateSeatStatus(Long id, boolean status);
+
     void deleteById(Long id);
 }

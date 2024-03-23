@@ -3,6 +3,8 @@ package net.cinemaApplication.backend.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
+import net.cinemaApplication.backend.entity.cinemaHall.Seat;
+import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 import net.cinemaApplication.backend.service.services.CinemaHallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,11 +38,25 @@ public class CinemaHallController {
         return cinemaHall.get();
     }
 
-    @Operation(summary = "Save cinema hall object")
-    @PostMapping("/save_cinemaHall")
-    public CinemaHall saveCinemaHall(@Valid @RequestBody CinemaHall cinemaHall)
+    @Operation(summary = "Add new cinema hall object")
+    @PostMapping("/add/cinemaHall")
+    public CinemaHall addCinemaHall(@Valid @RequestBody CinemaHall cinemaHall)
     {
-        return cinemaHallService.saveCinemaHall(cinemaHall);
+        return cinemaHallService.addCinemaHall(cinemaHall);
+    }
+    @Operation(summary = "Add cinema hall to the movie session")
+    @PostMapping("/add/cinemaHall{cinemaHallId}/movieSession{movieSessionId}")
+    public MovieSession addCinemaHall(@PathVariable("movieSessionId") Long movieSessionId,
+                                    @PathVariable("cinemaHallId") Long cinemaHallId)
+    {
+        return cinemaHallService.addHallForTheMovieSession(cinemaHallId, movieSessionId);
+    }
+
+    @Operation(summary = "Add seats to the cinema hall (you can only add as many seats as cinema hall allows)")
+    @PostMapping("/add/cinemaHall{cinemaHallId}/seats")
+    public List<Seat> addCinemaHall(@PathVariable("cinemaHallId") Long cinemaHallId)
+    {
+        return cinemaHallService.addSeatsToTheMovieHall(cinemaHallId);
     }
 
     @Operation(summary = "Update a cinema hall")
@@ -57,4 +73,6 @@ public class CinemaHallController {
         cinemaHallService.deleteById(id);
         return "Deleted Successfully";
     }
+
+
 }

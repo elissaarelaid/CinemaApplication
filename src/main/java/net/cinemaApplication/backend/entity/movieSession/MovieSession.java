@@ -53,9 +53,8 @@ public class MovieSession {
     @Column(name = "movie_session_price")
     private int movieSessionPrice;
 
-    @JsonIgnore
     @Nullable
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;
 

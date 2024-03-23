@@ -18,22 +18,6 @@ import java.util.Optional;
 public class MovieSessionServiceImplementation implements MovieSessionService {
     @Autowired
     private MovieSessionRepository movieSessionRepository;
-//    @Override
-//    public MovieSession saveMovieSession(MovieSession movieSession) {
-//        if (movieSession.getEndDate().isBefore(LocalDateTime.now())) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date is past!");
-//        }
-//        if (movieSession.getEndDate().isBefore(movieSession.getStartDate())) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date should be before end date!");
-//        }
-//        if (Arrays.stream(MovieFormat.values()).noneMatch(c -> c.equals(movieSession.getMovieFormat()))) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie format is not correct");
-//        }
-//        if (Arrays.stream(Language.values()).noneMatch(c -> c.equals(movieSession.getLanguage()))) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Language is not correct");
-//        }
-//        return movieSessionRepository.save(movieSession);
-//    }
 
     @Override
     public List<MovieSession> getAllMovieSessions() {
