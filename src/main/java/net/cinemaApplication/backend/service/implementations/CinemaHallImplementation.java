@@ -34,8 +34,12 @@ public class CinemaHallImplementation implements CinemaHallService {
         if (cinemaHall.getSeatRows() < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seat row number must be positive");
         }
-        return cinemaHallRepository.save(cinemaHall);
+        CinemaHall savedCinemaHall = cinemaHallRepository.save(cinemaHall);
+
+        addSeatsToTheMovieHall(savedCinemaHall);
+        return savedCinemaHall;
     }
+
 
     @Override
     public List<CinemaHall> getAllCinemaHalls() {
@@ -66,23 +70,22 @@ public class CinemaHallImplementation implements CinemaHallService {
         cinemaHallRepository.deleteById(id);
     }
 
-    @Override //add hall for the movie session, movie session has to exist already
-    public MovieSession addHallForTheMovieSession(Long cinemaHallId, Long movieSessionId) {
-        MovieSession movieSession = movieSessionRepository.findById(movieSessionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie session not found"));
-        CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found"));
-        movieSession.setHall(cinemaHall);
-        cinemaHall.getSessions().add(movieSession);
-        cinemaHallRepository.save(cinemaHall);
-        return movieSession;
-    }
+//    @Override //add hall for the movie session, movie session has to exist already
+//    public MovieSession addHallForTheMovieSession(Long cinemaHallId, Long movieSessionId) {
+//        MovieSession movieSession = movieSessionRepository.findById(movieSessionId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie session not found"));
+//        CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found"));
+//        movieSession.setHall(cinemaHall);
+//        cinemaHall.getSessions().add(movieSession);
+//        cinemaHallRepository.save(cinemaHall);
+//        return movieSession;
+//    }
 
-    @Override //add seats to the hall (adds all the seats at one time)
-    //you can only add as many seats as cinema hall allows
-    public List<Seat> addSeatsToTheMovieHall(Long cinemaHallId) {
-        CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found"));
+    @Override //add seats to the hall (adds all the seats at one time automatically while creating a hall)
+    public List<Seat> addSeatsToTheMovieHall(CinemaHall cinemaHall) {
+//        CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found"));
         int totalSeatsAllowed = cinemaHall.getSeatColumns() * cinemaHall.getSeatRows();
         int existingSeats = cinemaHall.getSeats() != null ? cinemaHall.getSeats().size() : 0;
 

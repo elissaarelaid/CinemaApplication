@@ -6,13 +6,16 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
+import net.cinemaApplication.backend.entity.cinemaHall.Seat;
 import net.cinemaApplication.backend.entity.movie.Movie;
 import net.cinemaApplication.backend.entity.user.Ticket;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //firstly we add moviesession and later hall
 @Setter
@@ -72,5 +75,4 @@ public class MovieSession {
             this.endTime = this.startTime.plusMinutes(movieLengthInMinutes);
         }
     }
-
 }

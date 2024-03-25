@@ -38,7 +38,7 @@ public class MovieSessionServiceImplementation implements MovieSessionService {
                 && c.getSessionDate().isBefore(plusWeek)).toList();
     }
 
-    @Override
+    @Override //cannot update cinemaHall
     public MovieSession updateMovieSession(MovieSession movieSession, Long id) {
 
         MovieSession movieSessionFromDb = movieSessionRepository.findById(id).get(); //get old movie session from database

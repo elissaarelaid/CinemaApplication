@@ -44,20 +44,20 @@ public class CinemaHallController {
     {
         return cinemaHallService.addCinemaHall(cinemaHall);
     }
-    @Operation(summary = "Add cinema hall to the movie session")
-    @PostMapping("/add/cinemaHall{cinemaHallId}/movieSession{movieSessionId}")
-    public MovieSession addCinemaHall(@PathVariable("movieSessionId") Long movieSessionId,
-                                    @PathVariable("cinemaHallId") Long cinemaHallId)
-    {
-        return cinemaHallService.addHallForTheMovieSession(cinemaHallId, movieSessionId);
-    }
+//    @Operation(summary = "Add cinema hall to the movie session")
+//    @PostMapping("/add/cinemaHall{cinemaHallId}/movieSession{movieSessionId}")
+//    public MovieSession addCinemaHall(@PathVariable("movieSessionId") Long movieSessionId,
+//                                    @PathVariable("cinemaHallId") Long cinemaHallId)
+//    {
+//        return cinemaHallService.addHallForTheMovieSession(cinemaHallId, movieSessionId);
+//    }
 
-    @Operation(summary = "Add seats to the cinema hall (you can only add as many seats as cinema hall allows)")
-    @PostMapping("/add/cinemaHall{cinemaHallId}/seats")
-    public List<Seat> addCinemaHall(@PathVariable("cinemaHallId") Long cinemaHallId)
-    {
-        return cinemaHallService.addSeatsToTheMovieHall(cinemaHallId);
-    }
+//    @Operation(summary = "Add seats to the cinema hall (you can only add as many seats as cinema hall allows)")
+//    @PostMapping("/add/cinemaHall{cinemaHallId}/seats")
+//    public List<Seat> addCinemaHall(@PathVariable("cinemaHallId") Long cinemaHallId)
+//    {
+//        return cinemaHallService.addSeatsToTheMovieHall(cinemaHallId);
+//    }
 
     @Operation(summary = "Update a cinema hall")
     @PutMapping("/updateCinemaHall{id}")

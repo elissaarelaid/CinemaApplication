@@ -1,12 +1,15 @@
 package net.cinemaApplication.backend.service.implementations;
 
+import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
 import net.cinemaApplication.backend.entity.movie.AgeLimit;
 import net.cinemaApplication.backend.entity.movie.Genre;
 import net.cinemaApplication.backend.entity.movie.Movie;
 import net.cinemaApplication.backend.entity.movieSession.Language;
 import net.cinemaApplication.backend.entity.movieSession.MovieFormat;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
+import net.cinemaApplication.backend.repository.CinemaHallRepository;
 import net.cinemaApplication.backend.repository.MovieRepository;
+import net.cinemaApplication.backend.repository.MovieSessionRepository;
 import net.cinemaApplication.backend.service.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,10 @@ import java.util.Optional;
 public class MovieServiceImplementation implements MovieService {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private MovieSessionRepository movieSessionRepository;
+    @Autowired
+    private CinemaHallRepository cinemaHallRepository;
     @Override
     public Movie addMovie(Movie movie) {
         if (Objects.isNull(movie.getTitle()) || "".equalsIgnoreCase(movie.getTitle())) {
@@ -102,26 +109,36 @@ public class MovieServiceImplementation implements MovieService {
     }
 
     @Override //add new movie session to the movie
-    public MovieSession addNewMovieSessionToTheMovie(Long id, MovieSession movieSession) {
-        Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-        if (movieSession.getSessionDate().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date is past");
-        }
-        if (Arrays.stream(MovieFormat.values()).noneMatch(c -> c.equals(movieSession.getMovieFormat()))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie format is not correct");
-        }
-        if (Arrays.stream(Language.values()).noneMatch(c -> c.equals(movieSession.getLanguage()))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Language is not correct");
-        }
-        if(movieSession.getMovieSessionPrice() <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie session price cannot be negative");
-        }
-        movieSession.setMovie(movie);
-        movie.getSessions().add(movieSession);
-        movieSession.calculateEndTime();
-        movieRepository.save(movie);
-        return movieSession;
+    public MovieSession addNewMovieSessionToTheMovie(Long movieId, MovieSession movieSession, Long cinemaHallId) {
+            Movie movie = movieRepository.findById(movieId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+            CinemaHall cinemaHall = cinemaHallRepository.findById(cinemaHallId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found"));
+
+            if (movieSession.getSessionDate().isBefore(LocalDate.now())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date is past");
+            }
+            if (Arrays.stream(MovieFormat.values()).noneMatch(c -> c.equals(movieSession.getMovieFormat()))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie format is not correct");
+            }
+            if (Arrays.stream(Language.values()).noneMatch(c -> c.equals(movieSession.getLanguage()))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Language is not correct");
+            }
+            if (movieSession.getMovieSessionPrice() <= 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie session price cannot be negative");
+            }
+
+            movieSession.setMovie(movie);
+            movieSession.setHall(cinemaHall);
+            movieSession.calculateEndTime();
+
+            assert cinemaHall.getSeats() != null;
+            movieSession.setFreeSeats(cinemaHall.getSeats().size()); //all seats are free when session is created
+            MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
+            movieRepository.save(movie);
+            cinemaHallRepository.save(cinemaHall);
+
+            return savedMovieSession;
     }
 
     @Override //return all movie sessions for specific date and specific movie (it filters according to start date)

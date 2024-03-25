@@ -85,9 +85,9 @@ public class MovieController {
     }
 
     @Operation(summary = "Add new movie session (path variable is id of the movie you want to add a session to)")
-    @PostMapping("/add_movieSession{id}")
-    public MovieSession addNewMovieSession(@PathVariable("id") Long id ,@Valid @RequestBody MovieSession movieSession) {
-        return movieService.addNewMovieSessionToTheMovie(id, movieSession);
+    @PostMapping("/add/movieSession{movieId}/{hallId}")
+    public MovieSession addNewMovieSession(@PathVariable("movieId") Long movieId, @Valid @RequestBody MovieSession movieSession, @PathVariable("hallId") Long hallId ) {
+        return movieService.addNewMovieSessionToTheMovie(movieId, movieSession, hallId);
     }
 
 }
