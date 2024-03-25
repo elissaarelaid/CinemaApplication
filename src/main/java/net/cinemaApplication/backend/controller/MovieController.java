@@ -29,7 +29,7 @@ public class MovieController {
     }
 
     @Operation(summary = "Get movie by id")
-    @GetMapping("/movies{id}")
+    @GetMapping("/movie{id}")
     public Movie getMovieById(@PathVariable("id") Long id)
     {
         Optional<Movie> movie = movieService.getMovieById(id);
@@ -40,7 +40,7 @@ public class MovieController {
     }
 
     @Operation(summary = "Get all movie sessions for a specific movie")
-    @GetMapping("/movies{id}/sessions")
+    @GetMapping("/movie{id}/sessions")
     public List<MovieSession> getAllSpecificMovieSessions(@PathVariable("id") Long id)
     {
         return movieService.getMovieSessionsForSpecificMovie(id);

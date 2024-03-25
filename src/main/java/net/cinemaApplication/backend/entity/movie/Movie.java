@@ -1,13 +1,17 @@
 package net.cinemaApplication.backend.entity.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 //firstly we add movie and later moviesessions
 @Setter
 @Getter
@@ -16,6 +20,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "movies")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

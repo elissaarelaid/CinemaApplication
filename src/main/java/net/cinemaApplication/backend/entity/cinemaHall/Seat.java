@@ -1,10 +1,10 @@
 package net.cinemaApplication.backend.entity.cinemaHall;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
-import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 import net.cinemaApplication.backend.entity.user.Ticket;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "seats")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Seat {
     private boolean isSeatTaken;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cinema_hall_id")
     private CinemaHall hall;
 

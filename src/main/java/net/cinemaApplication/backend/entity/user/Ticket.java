@@ -1,6 +1,7 @@
 package net.cinemaApplication.backend.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +15,7 @@ import net.cinemaApplication.backend.entity.movieSession.MovieSession;
 @Builder
 @Entity
 @Table(name = "tickets")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,21 +26,23 @@ public class Ticket {
 
     @JsonIgnore
     @Nullable
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user; //one ticket is owned by one user
 
     @JsonIgnore
     @Nullable
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "session_id")
     private MovieSession session;
 
     @JsonIgnore
     @Nullable
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seat_id")
     private Seat seat;
+
+    private boolean status;
 
     public void setPrice() {
         if (session != null) {
