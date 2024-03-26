@@ -36,7 +36,6 @@ public class Ticket {
     @JoinColumn(name = "session_id")
     private MovieSession session;
 
-    @JsonIgnore
     @Nullable
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seat_id")

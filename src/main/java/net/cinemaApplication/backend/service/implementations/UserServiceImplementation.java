@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @Service
 public class UserServiceImplementation implements UserService {
     @Autowired
@@ -90,11 +91,15 @@ public class UserServiceImplementation implements UserService {
         User user = userOptional.get();
         List<Ticket> newTickets = new ArrayList<>();
         generateTakenSeats(session);
-        Random rnd = new Random();
+
+        assert session.getHall() != null;
+        List<Seat> recommendedSeats = recommendSeats(ticketAmount, session.getHall());
+        if (recommendedSeats == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are not that many free tickets left!");
+        }
 
         for (int i = 0; i < ticketAmount; i++) {
-            List<Seat> availableSeats = session.getHall().getSeats().stream().filter(c -> !c.isSeatTaken()).toList();
-            Seat seat = availableSeats.get(rnd.nextInt(availableSeats.size() - 1));
+            Seat seat = recommendedSeats.get(i);
             Ticket ticket = Ticket.builder()
                     .session(session)
                     .seat(seat)
@@ -127,6 +132,86 @@ public class UserServiceImplementation implements UserService {
             seatRepository.save(seat);
         }
     }
+    //used chatgpt help
+    private List<Seat> recommendSeats(int amount, CinemaHall hall) {
+        List<Seat> allSeats = hall.getSeats();
+        int hallRows = hall.getSeatRows();
+        int hallColumns = hall.getSeatColumns();
+        int middleRow = hallRows / 2;
+        int middleColumn = hallColumns / 2;
+
+        //sort all the free seats by their distance from the center
+        assert allSeats != null;
+        List<Seat> availableSeats = allSeats.stream()
+                .filter(seat -> !seat.isSeatTaken())
+                .sorted(Comparator.comparingInt(seat -> Math.abs(getSeatRow(seat, hall) - middleRow)
+                        + Math.abs(getSeatColumn(seat, hall) - middleColumn)))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (availableSeats.size() < amount) {
+            return null;
+        }
+
+        List<Seat> bestContinuousSeats = findBestContinuousSeats(amount, hallRows, hallColumns, availableSeats, hall);
+        if (!bestContinuousSeats.isEmpty()) {
+            return bestContinuousSeats;
+        } else {
+            for (int i = amount; i > 0; i--) {
+                List<Seat> continuousSeats = findBestContinuousSeats(i, hallRows, hallColumns, availableSeats, hall);
+                if (!continuousSeats.isEmpty()) {
+                    availableSeats.removeAll(continuousSeats);
+                    if (i == amount) {
+                        return continuousSeats;
+                    } else {
+                        continuousSeats.addAll(availableSeats.subList(0, amount - i));
+                        return continuousSeats;
+                    }
+                }
+            }
+
+        }
+        return new ArrayList<>();
+    }
+    //used chatgpt help
+
+    private List<Seat> findBestContinuousSeats(int amount, int hallRows, int hallColumns, List<Seat> availableSeats, CinemaHall hall) {
+        List<Seat> continuousSeats = new ArrayList<>();
+        if (amount == 1) {
+            continuousSeats.add(availableSeats.get(0));
+            return continuousSeats;
+        }
+        for (int row = 1; row <= hallRows; row++) {
+            for (int startColumn = 1; startColumn <= hallColumns; startColumn++) {
+                int endColumn = startColumn + amount - 1;
+                if (endColumn > hallColumns) break; //if row ends then take new row
+
+                //check if all seats are free
+                int finalRow = row;
+                int finalStartColumn = startColumn;
+                continuousSeats = availableSeats.stream()
+                        .filter(seat -> getSeatRow(seat, hall) == finalRow
+                                && getSeatColumn(seat, hall) >= finalStartColumn
+                                && getSeatColumn(seat, hall) <= endColumn)
+                        .collect(Collectors.toList());
+
+
+                if (continuousSeats.size() == amount) {
+                    return continuousSeats;
+                }
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private int getSeatRow(Seat seat, CinemaHall hall) {
+       return (seat.getSeatNr() - 1) / hall.getSeatColumns() + 1;
+    }
+
+    private int getSeatColumn(Seat seat, CinemaHall hall) {
+        return (seat.getSeatNr() - 1) % hall.getSeatColumns() + 1;
+    }
+
+
     @Override
     public Ticket cancelTicket(Long ticketId, Long userId) {
         Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
