@@ -11,5 +11,4 @@ public interface UserService {
     List<Movie> getHistory(Long userId);
     List<Movie> recommendMovies(Long userId);
     List<Ticket> buyMovieTickets(Long sessionId, Long userId, int ticketAmount);
-    Ticket cancelTicket(Long ticketId, Long userId); //set ticket status to false
 }

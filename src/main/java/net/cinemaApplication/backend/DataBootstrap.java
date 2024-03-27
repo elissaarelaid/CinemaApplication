@@ -104,7 +104,6 @@ public class DataBootstrap implements CommandLineRunner {
         for (int i = 1; i <= numberOfSeats; i++) {
             Seat seat = Seat.builder()
                     .seatNr(i)
-                    .isSeatTaken(false)
                     .hall(hall)
                     .build();
             seatRepository.save(seat);
@@ -114,7 +113,6 @@ public class DataBootstrap implements CommandLineRunner {
     private Seat createOneseat(CinemaHall hall) {
         Seat seat = Seat.builder()
                 .seatNr(7)
-                .isSeatTaken(false)
                 .hall(hall)
                 .build();
         seatRepository.save(seat);

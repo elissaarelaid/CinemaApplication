@@ -37,12 +37,12 @@ public class SeatController {
         return seat.get();
     }
 
-    @Operation(summary = "Update seat status when someone purchases a ticket or cancels a ticket")
-    @PutMapping("/updateSeatStatus{id}")
-    public Seat updateSeat(@PathVariable("id") Long id, @Valid @RequestBody boolean status)
-    {
-        return seatService.updateSeatStatus(id, status);
-    }
+//    @Operation(summary = "Update seat status when someone purchases a ticket or cancels a ticket")
+//    @PutMapping("/updateSeatStatus{id}")
+//    public Seat updateSeat(@PathVariable("id") Long id, @Valid @RequestBody boolean status)
+//    {
+//        return seatService.updateSeatStatus(id, status);
+//    }
 
     @Operation(summary = "Delete a seat")
     @DeleteMapping("/deleteSeat{id}")

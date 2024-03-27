@@ -2,6 +2,7 @@ package net.cinemaApplication.backend.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.movie.Movie;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
@@ -16,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-//katse
 @RestController
 public class MovieController {
     @Autowired private MovieService movieService;

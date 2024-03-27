@@ -7,7 +7,7 @@ import java.util.List;
 public interface SeatService {
     List<Seat> getAllSeats();
 
-    Seat updateSeatStatus(Long id, boolean status);
+//    Seat updateSeatStatus(Long id, boolean status);
 
     void deleteById(Long id);
 }

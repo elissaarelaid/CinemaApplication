@@ -98,7 +98,7 @@ public class CinemaHallImplementation implements CinemaHallService {
         for (int i = 0; i < seatsToAdd; i++) {
             Seat seat = Seat.builder()
                     .seatNr(existingSeats + i + 1)
-                    .isSeatTaken(false)
+//                    .isSeatTaken(false)
                     .hall(cinemaHall)
                     .build();
             cinemaHall.getSeats().add(seat);

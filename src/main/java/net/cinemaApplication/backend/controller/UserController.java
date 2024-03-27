@@ -30,12 +30,12 @@ public class UserController {
         return userService.getHistory(id);
     }
 
-    @Operation(summary = "User wants to cancel a ticket")
-    @GetMapping("/user{userId}/ticket{ticketId}/cancel")
-    public Ticket cancelATicket(@PathVariable("userId") Long userId, @PathVariable("ticketId") Long ticketId)
-    {
-        return userService.cancelTicket(ticketId, userId);
-    }
+//    @Operation(summary = "User wants to cancel a ticket")
+//    @GetMapping("/user{userId}/ticket{ticketId}/cancel")
+//    public Ticket cancelATicket(@PathVariable("userId") Long userId, @PathVariable("ticketId") Long ticketId)
+//    {
+//        return userService.cancelTicket(ticketId, userId);
+//    }
 
     @Operation(summary = "Recommend movies to the user according to their history")
     @GetMapping("/user{id}/recommend")

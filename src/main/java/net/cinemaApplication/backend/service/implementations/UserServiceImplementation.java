@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImplementation implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplementation.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -90,10 +93,10 @@ public class UserServiceImplementation implements UserService {
         }
         User user = userOptional.get();
         List<Ticket> newTickets = new ArrayList<>();
-        generateTakenSeats(session);
+        buyMovieTicketsToGenerateTakenSeats(session);
 
         assert session.getHall() != null;
-        List<Seat> recommendedSeats = recommendSeats(ticketAmount, session.getHall());
+        List<Seat> recommendedSeats = recommendSeats(ticketAmount, session);
         if (recommendedSeats == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are not that many free tickets left!");
         }
@@ -104,10 +107,8 @@ public class UserServiceImplementation implements UserService {
                     .session(session)
                     .seat(seat)
                     .user(user)
-                    .status(true)
                     .build();
             ticket.setPrice();
-            seat.setSeatTaken(true);
             Seat savedSeat = seatRepository.save(ticket.getSeat());
             ticket.setSeat(savedSeat);
             ticketRepository.save(ticket);
@@ -116,24 +117,48 @@ public class UserServiceImplementation implements UserService {
             newTickets.add(ticket);
         }
 
+        session.setFreeSeats(session.getFreeSeats() - ticketAmount);
         movieSessionRepository.save(session);
         userRepository.save(user);
         return newTickets;
     }
 
-    private void generateTakenSeats(MovieSession session) {
+    private void buyMovieTicketsToGenerateTakenSeats(MovieSession session) {
         CinemaHall hall = session.getHall();
         List<Seat> seats = hall.getSeats();
         Random rnd = new Random();
+        int takenSeatsCounter = 0;
         for (Seat seat : seats) {
-            if (!seat.isSeatTaken()) {
-                seat.setSeatTaken(rnd.nextBoolean());
+            if (seat.getTickets().stream().noneMatch(c -> c.getSession() == session)) {
+                boolean randomBoolean = rnd.nextBoolean();
+                if (randomBoolean) {
+                    Ticket ticket = Ticket.builder()
+                            .session(session)
+                            .seat(seat)
+                            .build();
+                    ticket.setPrice();
+                    Seat savedSeat = seatRepository.save(ticket.getSeat());
+                    ticket.setSeat(savedSeat);
+                    ticketRepository.save(ticket);
+                    session.getTickets().add(ticket);
+                    LOGGER.info("Ticket created for seat: {}", seat.getSeatNr());
+                    takenSeatsCounter++;
+                }
+                seatRepository.save(seat);
+            } else {
+                takenSeatsCounter++;
             }
-            seatRepository.save(seat);
+
         }
+        int newFreeSeats = session.getFreeSeats() - takenSeatsCounter;
+        session.setFreeSeats(newFreeSeats);
+        LOGGER.info("New free seats: {}", newFreeSeats);
     }
+
+
     //used chatgpt help
-    private List<Seat> recommendSeats(int amount, CinemaHall hall) {
+    private List<Seat> recommendSeats(int amount, MovieSession session) {
+        CinemaHall hall = session.getHall();
         List<Seat> allSeats = hall.getSeats();
         int hallRows = hall.getSeatRows();
         int hallColumns = hall.getSeatColumns();
@@ -142,8 +167,9 @@ public class UserServiceImplementation implements UserService {
 
         //sort all the free seats by their distance from the center
         assert allSeats != null;
+
         List<Seat> availableSeats = allSeats.stream()
-                .filter(seat -> !seat.isSeatTaken())
+                .filter(seat -> seat.getTickets().stream().noneMatch(c -> c.getSession() == session))
                 .sorted(Comparator.comparingInt(seat -> Math.abs(getSeatRow(seat, hall) - middleRow)
                         + Math.abs(getSeatColumn(seat, hall) - middleColumn)))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -211,24 +237,24 @@ public class UserServiceImplementation implements UserService {
         return (seat.getSeatNr() - 1) % hall.getSeatColumns() + 1;
     }
 
-
-    @Override
-    public Ticket cancelTicket(Long ticketId, Long userId) {
-        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
-        if (ticketOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found");
-        }
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-        Ticket ticket = ticketOptional.get();
-        User user = userOptional.get();
-        if (!user.getTickets().contains(ticket)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not have this ticket");
-        }
-        ticket.setStatus(false); //cancelled ticket
-        ticketRepository.save(ticket);
-        return ticket;
-    }
+//
+//    @Override
+//    public Ticket cancelTicket(Long ticketId, Long userId) { //todo:vabastada koht saalis!!!
+//        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
+//        if (ticketOptional.isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ticket not found");
+//        }
+//        Optional<User> userOptional = userRepository.findById(userId);
+//        if (userOptional.isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+//        }
+//        Ticket ticket = ticketOptional.get();
+//        User user = userOptional.get();
+//        if (!user.getTickets().contains(ticket)) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not have this ticket");
+//        }
+//        ticket.setStatus(false); //cancelled ticket
+//        ticketRepository.save(ticket);
+//        return ticket;
+//    }
 }
