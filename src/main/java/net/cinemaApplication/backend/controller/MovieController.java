@@ -2,6 +2,7 @@ package net.cinemaApplication.backend.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.movie.Movie;
@@ -21,73 +22,72 @@ import java.util.Optional;
 public class MovieController {
     @Autowired private MovieService movieService;
 
-    @Operation(summary = "Get all movies")
+    @Operation(summary = "Get all movies" ,
+            description = "Returns a list of all the movies",
+            responses = {@ApiResponse(responseCode = "200", description = "All movies successfully returned")})
     @GetMapping("/movies")
     public List<Movie> getAllMovies()
     {
         return movieService.getAllMovies();
     }
 
-    @Operation(summary = "Get movie by id")
+    @Operation(summary = "Get movie by id",
+            description = "Returns a movie by id",
+            responses = {@ApiResponse(responseCode = "200", description = "Successfully returned a movie by id"),
+            @ApiResponse(responseCode = "404", description = "Movie not found")})
     @GetMapping("/movie{id}")
     public Movie getMovieById(@PathVariable("id") Long id)
     {
         Optional<Movie> movie = movieService.getMovieById(id);
         if (movie.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
         return movie.get();
     }
 
-    @Operation(summary = "Get all movie sessions for a specific movie")
-    @GetMapping("/movie{id}/sessions")
-    public List<MovieSession> getAllSpecificMovieSessions(@PathVariable("id") Long id)
-    {
-        return movieService.getMovieSessionsForSpecificMovie(id);
-    }
-
-    @Operation(summary = "Get movie sessions for a specific movie by specific date")
-    @GetMapping("/movieSession{id}/{date}")
-    public List<MovieSession> getMovieSessionByIdAndDate
-            (@PathVariable("id") Long id,
-             @PathVariable("date") LocalDate date)
-    {
-        return movieService.getMovieSessionsForSpecificMovieAndDate(date, id);
-    }
-
-    @Operation(summary = "Get all movie sessions for a week")
-    @GetMapping("/movieSessionsWeek/{id}/{date}")
-    public List<MovieSession> getMovieSessionsForAWeek(@PathVariable("date") LocalDate date, @PathVariable("id") Long id)
-    {
-        return movieService.getMovieSessionsForSpecificMovieAndWeek(date, id);
-    }
-
-    @Operation(summary = "Add new movie")
+    @Operation(summary = "Add new movie",
+            description = "Adds new movie." +
+                    " Ensures title, description and movie director name lengths are correct. Checks if age limit and genre are correct " +
+                    "and movie rating is between correct values",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "New movie created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input: title, description or movie director " +
+                            "name is not with the correct length, " +
+                            "Age limit or genre is not correct, " +
+                            "Rating is not between correct values")})
     @PostMapping("/add_movie")
     public Movie addMovie(@Valid @RequestBody Movie movie)
     {
         return movieService.addMovie(movie);
     }
 
-    @Operation(summary = "Update a movie")
+
+    @Operation(summary = "Update a movie",
+            description = "Updates a movie and also end time of the movie sessions that are related to this movie" +
+                    " Ensures title, description and movie director name lengths are correct. Checks if age limit and genre are correct " +
+                    "and movie rating is between correct values",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Movie updated successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input: title, description or movie director " +
+                            "name is not with the correct length, " +
+                            "Age limit or genre is not correct, " +
+                            "Rating is not between correct values"),
+            @ApiResponse(responseCode = "404", description = "Movie not found")})
     @PutMapping("/updateMovie{id}")
     public Movie updateMovie(@RequestBody Movie movie, @PathVariable("id") Long id)
     {
         return movieService.updateMovie(movie, id);
     }
 
-    @Operation(summary = "Delete a movie")
+    @Operation(summary = "Delete a movie",
+            description = "Deletes a movie by id",
+            responses = {@ApiResponse(responseCode = "200", description = "Movie is successfully deleted"),
+                    @ApiResponse(responseCode = "404", description = "Movie not found")})
     @DeleteMapping("/deleteMovie{id}")
     public String deleteMovieById(@PathVariable("id") Long id)
     {
         movieService.deleteById(id);
         return "Deleted Successfully";
-    }
-
-    @Operation(summary = "Add new movie session (path variable is id of the movie you want to add a session to)")
-    @PostMapping("/add/movieSession{movieId}/{hallId}")
-    public MovieSession addNewMovieSession(@PathVariable("movieId") Long movieId, @Valid @RequestBody MovieSession movieSession, @PathVariable("hallId") Long hallId ) {
-        return movieService.addNewMovieSessionToTheMovie(movieId, movieSession, hallId);
     }
 
 }

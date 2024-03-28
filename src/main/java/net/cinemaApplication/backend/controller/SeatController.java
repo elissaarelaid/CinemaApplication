@@ -47,7 +47,7 @@ public class SeatController {
             description = "Deletes a seat by id",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully deleted a seat by id"),
                     @ApiResponse(responseCode = "404", description = "Seat not found")})
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/deleteSeat/{id}")
     public String deleteSeatById(@PathVariable("id") Long id)
     {
         seatService.deleteById(id);

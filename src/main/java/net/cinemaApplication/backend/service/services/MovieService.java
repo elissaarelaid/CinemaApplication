@@ -14,12 +14,4 @@ public interface MovieService {
     Movie updateMovie(Movie movie, Long id);
     void deleteById(Long id);
     Optional<Movie> getMovieById(Long id);
-    List<MovieSession> getMovieSessionsForSpecificMovie(Long id);
-    MovieSession addNewMovieSessionToTheMovie(Long movieId, MovieSession movieSession, Long cinemaHallId);
-
-    //return all movie sessions for specific date and specific movie (it filters according to start date)
-    List<MovieSession> getMovieSessionsForSpecificMovieAndDate(LocalDate date, Long id);
-
-    //return all movie sessions for a week for a specific movie (it filters according to start date)
-    List<MovieSession> getMovieSessionsForSpecificMovieAndWeek(LocalDate date, Long id);
 }
