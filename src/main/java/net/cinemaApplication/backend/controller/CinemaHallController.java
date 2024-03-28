@@ -1,6 +1,7 @@
 package net.cinemaApplication.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.cinemaHall.CinemaHall;
@@ -22,59 +23,54 @@ public class CinemaHallController {
     @Autowired
     private CinemaHallService cinemaHallService;
 
-    @Operation(summary = "Get all cinema halls")
-    @GetMapping("/cinemaHalls")
+    @Operation(summary = "Get all cinema halls",
+            description = "Returns a list of all the cinema halls in this cinema",
+            responses = {@ApiResponse(responseCode = "200", description = "All cinema halls successfully returned")})
+    @GetMapping("/halls")
     public List<CinemaHall> getAllCinemaHalls()
     {
         return cinemaHallService.getAllCinemaHalls();
     }
 
-    @Operation(summary = "Get cinema hall by id")
-    @GetMapping("/cinemaHall{id}")
+    @Operation(summary = "Get cinema hall by id",
+            description = "Returns cinema hall by its id",
+            responses = {@ApiResponse(responseCode = "200", description = "Cinema hall successfully returned"),
+                    @ApiResponse(responseCode = "404", description = "Cinema hall not found")})
+    @GetMapping("/hall/{id}")
     public CinemaHall getCinemaHallById(@PathVariable("id") Long id)
     {
-        Optional<CinemaHall> cinemaHall = cinemaHallService.getAllCinemaHalls().stream().filter(c -> Objects.equals(c.getId(), id)).findFirst();
+        Optional<CinemaHall> cinemaHall = cinemaHallService.getCinemaHallById(id);
         if (cinemaHall.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cinema hall not found");
         }
         return cinemaHall.get();
     }
 
-    @Operation(summary = "Add new cinema hall object")
-    @PostMapping("/add/cinemaHall")
+    @Operation(summary = "Add new cinema hall object",
+            description = "Adds new cinema hall and automatically creates seats to it." +
+                    " Ensures hall number, seat columns, and seat rows are positive. Checks if hall number is unique.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "New cinema hall is successfully created"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input: Hall number must be positive, " +
+                            "Hall nr is already taken, Seat column number must be positive, " +
+                            "Seat row number must be positive"),
+                    @ApiResponse(responseCode = "404", description = "Cinema hall not found")
+            })
+    @PostMapping("/add/hall")
     public CinemaHall addCinemaHall(@Valid @RequestBody CinemaHall cinemaHall)
     {
         return cinemaHallService.addCinemaHall(cinemaHall);
     }
-//    @Operation(summary = "Add cinema hall to the movie session")
-//    @PostMapping("/add/cinemaHall{cinemaHallId}/movieSession{movieSessionId}")
-//    public MovieSession addCinemaHall(@PathVariable("movieSessionId") Long movieSessionId,
-//                                    @PathVariable("cinemaHallId") Long cinemaHallId)
-//    {
-//        return cinemaHallService.addHallForTheMovieSession(cinemaHallId, movieSessionId);
-//    }
 
-//    @Operation(summary = "Add seats to the cinema hall (you can only add as many seats as cinema hall allows)")
-//    @PostMapping("/add/cinemaHall{cinemaHallId}/seats")
-//    public List<Seat> addCinemaHall(@PathVariable("cinemaHallId") Long cinemaHallId)
-//    {
-//        return cinemaHallService.addSeatsToTheMovieHall(cinemaHallId);
-//    }
-
-    @Operation(summary = "Update a cinema hall")
-    @PutMapping("/updateCinemaHall{id}")
-    public CinemaHall updateCinemaHall(@RequestBody CinemaHall cinemaHall, @PathVariable("id") Long id)
-    {
-        return cinemaHallService.updateCinemaHall(cinemaHall, id);
-    }
-
-    @Operation(summary = "Delete a cinema hall")
-    @DeleteMapping("/deleteCinemaHall{id}")
+    @Operation(summary = "Delete a cinema hall",
+    description = "Deletes cinema hall if cinema hall exists. Deletes tickets, seats and movie sessions related to this hall.",
+    responses = {@ApiResponse(responseCode = "200", description = "Cinema hall successfully deleted"),
+    @ApiResponse(responseCode = "404", description = "Cinema all not found")})
+    @DeleteMapping("/delete/hall/{id}")
     public String deleteCinemaHallById(@PathVariable("id") Long id)
     {
         cinemaHallService.deleteById(id);
         return "Deleted Successfully";
     }
-
 
 }
