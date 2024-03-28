@@ -56,6 +56,7 @@ public class UserServiceImplementation implements UserService {
         if (userOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+        User user = userOpt.get();
         List<Movie> allWatchedMovies = getHistory(id);
         Map<Genre, Integer> genresAndCounts = new HashMap<>();  //genres and how many times the user has watched this genre
         for (Movie movie : allWatchedMovies) {
@@ -77,7 +78,9 @@ public class UserServiceImplementation implements UserService {
         for (int i = 0; i < size; i++) {
             favouriteGenres.add(allGenres.get(i));
         }
-        return movieRepository.findAll().stream().filter(c -> favouriteGenres.contains(c.getGenre())).toList();
+
+        return movieRepository.findAll().stream().filter(c -> favouriteGenres.contains(c.getGenre()) &&
+                user.getTickets().stream().noneMatch(d -> d.getSession().getMovie() == c)).toList();
     }
 
     @Override

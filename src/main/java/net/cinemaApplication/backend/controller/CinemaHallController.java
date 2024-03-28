@@ -66,7 +66,7 @@ public class CinemaHallController {
     description = "Deletes cinema hall if cinema hall exists. Deletes tickets, seats and movie sessions related to this hall.",
     responses = {@ApiResponse(responseCode = "200", description = "Cinema hall successfully deleted"),
     @ApiResponse(responseCode = "404", description = "Cinema all not found")})
-    @DeleteMapping("/delete/hall/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteCinemaHallById(@PathVariable("id") Long id)
     {
         cinemaHallService.deleteById(id);

@@ -1,5 +1,7 @@
 package net.cinemaApplication.backend.service.implementations;
 
+import net.cinemaApplication.backend.entity.movie.AgeLimit;
+import net.cinemaApplication.backend.entity.movie.Genre;
 import net.cinemaApplication.backend.entity.movieSession.Language;
 import net.cinemaApplication.backend.entity.movieSession.MovieFormat;
 import net.cinemaApplication.backend.entity.movieSession.MovieSession;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -67,4 +70,34 @@ public class MovieSessionServiceImplementation implements MovieSessionService {
     public Optional<MovieSession> getMovieSessionById(Long id) {
         return movieSessionRepository.findById(id);
     }
+
+    /**
+     * Filters movie sessions for a week according to language
+     * @param language
+     * @return
+     */
+    @Override
+    public List<MovieSession> filterByLanguage(Language language, LocalDate date) {
+        List<MovieSession> movieSessionForAWeek = getAllMovieSessionsForAWeek(date);
+        return movieSessionForAWeek.stream().filter(m -> m.getLanguage() == language).toList();
+    }
+
+    @Override
+    public List<MovieSession> filterByGenre(Genre genre, LocalDate date) {
+        List<MovieSession> movieSessionForAWeek = getAllMovieSessionsForAWeek(date);
+        return movieSessionForAWeek.stream().filter(m -> m.getMovie().getGenre() == genre).toList();
+    }
+
+    @Override
+    public List<MovieSession> filterByStartTime(LocalTime startTime, LocalDate date) {
+        List<MovieSession> movieSessionForAWeek = getAllMovieSessionsForAWeek(date);
+        return movieSessionForAWeek.stream().filter(m -> m.getStartTime().isAfter(startTime)).toList();
+    }
+
+    @Override
+    public List<MovieSession> filterByAgeLimit(AgeLimit ageLimit, LocalDate date) {
+        List<MovieSession> movieSessionForAWeek = getAllMovieSessionsForAWeek(date);
+        return movieSessionForAWeek.stream().filter(m -> m.getMovie().getAgeLimit() == ageLimit).toList();
+    }
+
 }

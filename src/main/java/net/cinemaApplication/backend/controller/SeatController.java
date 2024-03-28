@@ -1,6 +1,7 @@
 package net.cinemaApplication.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.cinemaHall.Seat;
 import net.cinemaApplication.backend.entity.movie.Movie;
@@ -19,36 +20,48 @@ public class SeatController {
     @Autowired
     private SeatService seatService;
 
-    @Operation(summary = "Get all seats")
+    @Operation(summary = "Get all seats",
+    description = "Gets all the seats in the system",
+    responses = {@ApiResponse(responseCode = "200", description = "Successfully returned all seats")})
     @GetMapping("/seats")
     public List<Seat> getAllSeats()
     {
         return seatService.getAllSeats();
     }
 
-    @Operation(summary = "Get seat by id")
-    @GetMapping("/seat{id}")
+    @Operation(summary = "Get seat by id",
+            description = "Gets a seat by id",
+            responses = {@ApiResponse(responseCode = "200", description = "Successfully returned a seat by id"),
+            @ApiResponse(responseCode = "404", description = "Seat not found")})
+    @GetMapping("/seat/{id}")
     public Seat getSeatById(@PathVariable("id") Long id)
     {
-        Optional<Seat> seat = seatService.getAllSeats().stream().filter(c -> Objects.equals(c.getId(), id)).findFirst();
+        Optional<Seat> seat = seatService.getSeatById(id);
         if (seat.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
         }
         return seat.get();
     }
 
-//    @Operation(summary = "Update seat status when someone purchases a ticket or cancels a ticket")
-//    @PutMapping("/updateSeatStatus{id}")
-//    public Seat updateSeat(@PathVariable("id") Long id, @Valid @RequestBody boolean status)
-//    {
-//        return seatService.updateSeatStatus(id, status);
-//    }
-
-    @Operation(summary = "Delete a seat")
-    @DeleteMapping("/deleteSeat{id}")
+    @Operation(summary = "Delete a seat",
+            description = "Deletes a seat by id",
+            responses = {@ApiResponse(responseCode = "200", description = "Successfully deleted a seat by id"),
+                    @ApiResponse(responseCode = "404", description = "Seat not found")})
+    @DeleteMapping("/delete/{id}")
     public String deleteSeatById(@PathVariable("id") Long id)
     {
         seatService.deleteById(id);
         return "Deleted Successfully";
     }
+
+    @Operation(summary = "Get all seats in the cinema hall",
+            description = "Gets all the seats from specific cinema hall",
+            responses = {@ApiResponse(responseCode = "200", description = "Successfully returned all seats"),
+                    @ApiResponse(responseCode = "404", description = "Cinema hall not found")})
+    @DeleteMapping("/getCinemaHallSeats/{id}")
+    public List<Seat> getAllCinemaHallSeats(@PathVariable("id") Long id)
+    {
+        return seatService.getAllSeatsFromCinemaHall(id);
+    }
+
 }
