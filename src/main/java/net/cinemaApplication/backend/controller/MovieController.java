@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @RestController
+@Tag(name = "Movie", description = "Operations related to movies")
 public class MovieController {
     @Autowired private MovieService movieService;
 

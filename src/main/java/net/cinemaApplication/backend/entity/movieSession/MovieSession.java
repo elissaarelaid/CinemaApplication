@@ -44,7 +44,8 @@ public class MovieSession {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Schema(description = "End time of the movie session. Is calculated according to movie length", readOnly = true)
+    @JsonIgnore
+    @Schema(description = "End time of the movie session. Is calculated according to movie length")
     @Column(name = "end_time")
     private LocalTime endTime;
 
@@ -79,6 +80,9 @@ public class MovieSession {
     @Builder.Default
     List<Ticket> tickets = new ArrayList<>();
 
+    /**
+     * Calculates end time for the movie session according to movie length and start time
+     */
     public void calculateEndTime() {
         if (this.movie != null && this.startTime != null) {
             int movieLengthInMinutes = this.movie.getMovieLength();

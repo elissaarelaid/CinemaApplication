@@ -2,6 +2,7 @@ package net.cinemaApplication.backend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import net.cinemaApplication.backend.entity.cinemaHall.Seat;
 import net.cinemaApplication.backend.entity.movie.Movie;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "Seat", description = "Operations related to seats")
 public class SeatController {
     @Autowired
     private SeatService seatService;

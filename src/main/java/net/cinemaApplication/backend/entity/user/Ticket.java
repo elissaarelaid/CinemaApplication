@@ -26,7 +26,7 @@ public class Ticket {
     private Long id;
 
     @Schema(description = "Price of the ticket. Is the same as movie session price")
-    @JsonIgnore
+//    @JsonIgnore
     @Min(value = 1, message = "Price must be positive")
     @Column(name = "ticket_price")
     private double ticketPrice;
