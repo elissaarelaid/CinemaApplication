@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 
+/**
+ * Class for generating test data
+ */
 @Component
 public class DataBootstrap implements CommandLineRunner {
     @Autowired
@@ -29,8 +32,6 @@ public class DataBootstrap implements CommandLineRunner {
     @Autowired
     private CinemaHallRepository cinemaHallRepository;
     @Autowired
-    private SeatRepository seatRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private TicketRepository ticketRepository;
@@ -38,33 +39,45 @@ public class DataBootstrap implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Movie movie1 = createAndSaveMovie("Movie1", Genre.ACTION, "Good movie");
-        Movie movie2 = createAndSaveMovie("Movie2", Genre.DRAMA, "Better movie");
-        Movie movie3 = createAndSaveMovie("Movie3", Genre.FANTASY, "Best movie");
+        //Movies
+        Movie movie1 = createAndSaveMovie("Movie1", Genre.ACTION, AgeLimit.OVER_14, 90, "Cool movie", 9);
+        Movie movie2 = createAndSaveMovie("Movie2", Genre.DRAMA,  AgeLimit.OVER_16, 120, "Super movie", 6);
+        Movie movie3 = createAndSaveMovie("Movie3", Genre.FANTASY,  AgeLimit.OVER_14, 60, "Sad movie", 7);
+        Movie movie4 = createAndSaveMovie("Movie4", Genre.COMEDY, AgeLimit.FAMILY, 105, "Funny movie", 8);
+        Movie movie5 = createAndSaveMovie("Movie5", Genre.SCIENCE_FICTION, AgeLimit.NO_LIMIT, 120, "Epic Sci-Fi", 10);
 
-        CinemaHall hall1 = createAndSaveCinemaHall(1, 2, 2);
-        CinemaHall hall2 = createAndSaveCinemaHall(2, 3, 5);
-        MovieSession session = createAndSaveMovieSession(movie1, hall1, LocalDate.of(2024, 3, 22), LocalTime.of(14,30), 10);
+        //Cinema halls
+        CinemaHall hall1 = createAndSaveCinemaHall(1, 5, 5);
+        CinemaHall hall2 = createAndSaveCinemaHall(2, 10, 11);
+        CinemaHall hall3 = createAndSaveCinemaHall(3, 8, 9);
+        CinemaHall hall4 = createAndSaveCinemaHall(4, 7, 7);
+
+        //Movie sessions
+        createAndSaveMovieSession(movie1, hall1, LocalDate.of(2024, 3, 22), LocalTime.of(14,30), 10);
         createAndSaveMovieSession(movie2, hall2, LocalDate.of(2024, 3, 23), LocalTime.of(14,45), 12);
+        createAndSaveMovieSession(movie3, hall3, LocalDate.of(2024, 3, 24), LocalTime.of(16, 0), 15);
+        createAndSaveMovieSession(movie4, hall4, LocalDate.of(2024, 3, 25), LocalTime.of(17, 30), 12);
+        createAndSaveMovieSession(movie5, hall1, LocalDate.of(2024, 3, 26), LocalTime.of(19, 0), 18);
 
-        createAndSaveSeats(hall1, 4);
-        createAndSaveSeats(hall2, 15);
-        Seat seat = createOneseat(hall1);
-        Seat seat2 = createOneseat(hall2);
+        //Users
         User user = createAndSaveUser("User1");
+        User user2 = createAndSaveUser("User2");
+        User user3 = createAndSaveUser("User3");
 
-        createAndSaveTickets(session, user, seat);
-        createAndSaveTickets(session, user, seat2);
+        //Tickets
+        createAndSaveTicket(user, hall1.getSessions().get(0), hall1.getSeats().get(0));
+        createAndSaveTicket(user2, hall2.getSessions().get(0), hall2.getSeats().get(1));
+        createAndSaveTicket(user3, hall3.getSessions().get(0), hall3.getSeats().get(2));
     }
 
-    private Movie createAndSaveMovie(String title, Genre genre, String description) {
+    private Movie createAndSaveMovie(String title, Genre genre, AgeLimit ageLimit, int movieLength, String description, int rating) {
         Movie movie = Movie.builder()
                 .title(title)
                 .genre(genre)
                 .description(description)
-                .movieLength(120)
-                .ageLimit(AgeLimit.NO_LIMIT)
-                .rating(8)
+                .movieLength(movieLength)
+                .ageLimit(ageLimit)
+                .rating(rating)
                 .director("Director")
                 .build();
         return movieRepository.save(movie);
@@ -100,27 +113,13 @@ public class DataBootstrap implements CommandLineRunner {
         userRepository.save(user);
         return user;
     }
-    private void createAndSaveSeats(CinemaHall hall, int numberOfSeats) {
-        for (int i = 1; i <= numberOfSeats; i++) {
-            Seat seat = Seat.builder()
-                    .seatNr(i)
-                    .hall(hall)
-                    .build();
-            seatRepository.save(seat);
-        }
-    }
-
-    private Seat createOneseat(CinemaHall hall) {
-        Seat seat = Seat.builder()
-                .seatNr(7)
-                .hall(hall)
+    private Ticket createAndSaveTicket(User user, MovieSession session, Seat seat) {
+        Ticket ticket = Ticket.builder()
+                .user(user)
+                .session(session)
+                .seat(seat)
+                .ticketPrice(session.getMovieSessionPrice())
                 .build();
-        seatRepository.save(seat);
-        return seat;
-    }
-    private void createAndSaveTickets(MovieSession session, User user, Seat seat) {
-            Ticket ticket = Ticket.builder().user(user).session(session).seat(seat).build();
-            ticket.setPrice();
-            ticketRepository.save(ticket);
+        return ticketRepository.save(ticket);
     }
 }
