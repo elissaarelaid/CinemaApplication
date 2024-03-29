@@ -53,21 +53,16 @@ public class DataBootstrap implements CommandLineRunner {
         CinemaHall hall4 = createAndSaveCinemaHall(4, 7, 7);
 
         //Movie sessions
-        createAndSaveMovieSession(movie1, hall1, LocalDate.of(2024, 3, 22), LocalTime.of(14,30), 10);
-        createAndSaveMovieSession(movie2, hall2, LocalDate.of(2024, 3, 23), LocalTime.of(14,45), 12);
-        createAndSaveMovieSession(movie3, hall3, LocalDate.of(2024, 3, 24), LocalTime.of(16, 0), 15);
-        createAndSaveMovieSession(movie4, hall4, LocalDate.of(2024, 3, 25), LocalTime.of(17, 30), 12);
-        createAndSaveMovieSession(movie5, hall1, LocalDate.of(2024, 3, 26), LocalTime.of(19, 0), 18);
+        createAndSaveMovieSession(movie1, hall1, LocalDate.of(2024, 3, 22), LocalTime.of(14,30), 10, Language.RUSSIAN);
+        createAndSaveMovieSession(movie2, hall2, LocalDate.of(2024, 3, 23), LocalTime.of(14,45), 12, Language.RUSSIAN);
+        createAndSaveMovieSession(movie3, hall3, LocalDate.of(2024, 3, 24), LocalTime.of(16, 0), 15, Language.ESTONIAN);
+        createAndSaveMovieSession(movie4, hall4, LocalDate.of(2024, 3, 25), LocalTime.of(17, 30), 12, Language.ENGLISH);
+        createAndSaveMovieSession(movie5, hall1, LocalDate.of(2024, 3, 26), LocalTime.of(19, 0), 18, Language.ESTONIAN);
 
         //Users
         User user = createAndSaveUser("User1");
         User user2 = createAndSaveUser("User2");
         User user3 = createAndSaveUser("User3");
-
-        //Tickets
-        createAndSaveTicket(user, hall1.getSessions().get(0), hall1.getSeats().get(0));
-        createAndSaveTicket(user2, hall2.getSessions().get(0), hall2.getSeats().get(1));
-        createAndSaveTicket(user3, hall3.getSessions().get(0), hall3.getSeats().get(2));
     }
 
     private Movie createAndSaveMovie(String title, Genre genre, AgeLimit ageLimit, int movieLength, String description, int rating) {
@@ -92,13 +87,13 @@ public class DataBootstrap implements CommandLineRunner {
         return cinemaHallRepository.save(hall);
     }
 
-    private MovieSession createAndSaveMovieSession(Movie movie, CinemaHall hall, LocalDate date, LocalTime start, int price) {
+    private MovieSession createAndSaveMovieSession(Movie movie, CinemaHall hall, LocalDate date, LocalTime start, int price, Language language) {
         MovieSession session = MovieSession.builder()
                 .movie(movie)
                 .hall(hall)
                 .sessionDate(date)
                 .startTime(start)
-                .language(Language.ENGLISH)
+                .language(language)
                 .freeSeats(hall.getSeatRows() * hall.getSeatColumns())
                 .movieFormat(MovieFormat.THREE_D)
                 .movieSessionPrice(price)
@@ -112,14 +107,5 @@ public class DataBootstrap implements CommandLineRunner {
         User user = User.builder().name(name).build();
         userRepository.save(user);
         return user;
-    }
-    private Ticket createAndSaveTicket(User user, MovieSession session, Seat seat) {
-        Ticket ticket = Ticket.builder()
-                .user(user)
-                .session(session)
-                .seat(seat)
-                .ticketPrice(session.getMovieSessionPrice())
-                .build();
-        return ticketRepository.save(ticket);
     }
 }

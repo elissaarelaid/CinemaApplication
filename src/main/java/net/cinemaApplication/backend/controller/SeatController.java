@@ -60,7 +60,7 @@ public class SeatController {
             description = "Retrieves all the seats from specific cinema hall",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully returned all seats"),
                     @ApiResponse(responseCode = "404", description = "Cinema hall not found")})
-    @DeleteMapping("/getCinemaHallSeats/{id}")
+    @GetMapping("/getCinemaHallSeats/{id}")
     public List<Seat> getAllCinemaHallSeats(@PathVariable("id") Long id)
     {
         return seatService.getAllSeatsFromCinemaHall(id);
