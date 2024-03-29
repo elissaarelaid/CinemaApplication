@@ -40,7 +40,7 @@ public class MovieSession {
     @Column(name = "session_date")
     private LocalDate sessionDate;
 
-    @Schema(description = "Start time of the movie session")
+    @Schema(description = "Start time of the movie session. Input should look like this \"startTime\": \"12:30\"")
     @Column(name = "start_time")
     private LocalTime startTime;
 

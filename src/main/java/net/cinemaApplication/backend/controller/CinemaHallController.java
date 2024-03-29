@@ -24,7 +24,7 @@ public class CinemaHallController {
     private CinemaHallService cinemaHallService;
 
     @Operation(summary = "Get all cinema halls",
-            description = "Returns a list of all the cinema halls in this cinema",
+            description = "Retrieves a list of all the cinema halls in this cinema",
             responses = {@ApiResponse(responseCode = "200", description = "All cinema halls successfully returned")})
     @GetMapping("/halls")
     public List<CinemaHall> getAllCinemaHalls()
@@ -33,7 +33,7 @@ public class CinemaHallController {
     }
 
     @Operation(summary = "Get cinema hall by id",
-            description = "Returns cinema hall by its id",
+            description = "Retrieves cinema hall by its id",
             responses = {@ApiResponse(responseCode = "200", description = "Cinema hall successfully returned"),
                     @ApiResponse(responseCode = "404", description = "Cinema hall not found")})
     @GetMapping("/hall/{id}")

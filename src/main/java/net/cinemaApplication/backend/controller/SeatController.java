@@ -17,13 +17,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@Tag(name = "Seat", description = "Operations related to seats")
+@Tag(name = "Seat", description = "Operations related to seats in the cinema system")
 public class SeatController {
     @Autowired
     private SeatService seatService;
 
     @Operation(summary = "Get all seats",
-    description = "Gets all the seats in the system",
+    description = "Retrieves all the seats in the system",
     responses = {@ApiResponse(responseCode = "200", description = "Successfully returned all seats")})
     @GetMapping("/seats")
     public List<Seat> getAllSeats()
@@ -32,7 +32,7 @@ public class SeatController {
     }
 
     @Operation(summary = "Get seat by id",
-            description = "Gets a seat by id",
+            description = "Retrieves a seat by id",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully returned a seat by id"),
             @ApiResponse(responseCode = "404", description = "Seat not found")})
     @GetMapping("/seat/{id}")
@@ -57,7 +57,7 @@ public class SeatController {
     }
 
     @Operation(summary = "Get all seats in the cinema hall",
-            description = "Gets all the seats from specific cinema hall",
+            description = "Retrieves all the seats from specific cinema hall",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully returned all seats"),
                     @ApiResponse(responseCode = "404", description = "Cinema hall not found")})
     @DeleteMapping("/getCinemaHallSeats/{id}")

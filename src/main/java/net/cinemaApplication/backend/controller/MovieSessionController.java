@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@Tag(name = "Movie session", description = "Operations related to movie sessions")
+@Tag(name = "Movie session", description = "Operations related to movie sessions in the cinema systme")
 public class MovieSessionController {
     @Autowired
     private MovieSessionService movieSessionService;
 
 
     @Operation(summary = "Get all movies sessions",
-    description = "Gets all the movie sessions",
+    description = "Retrieves all the movie sessions",
     responses = {@ApiResponse(responseCode = "200", description = "All cinema halls successfully created")})
     @GetMapping("/movieSessions")
     public List<MovieSession> getAllMovieSessions()
@@ -34,7 +34,7 @@ public class MovieSessionController {
     }
 
     @Operation(summary = "Get movie session by id",
-            description = "Returns movie session by id",
+            description = "Retrieves movie session by id",
             responses = {@ApiResponse(responseCode = "200", description = "Movie session successfully returned"),
                     @ApiResponse(responseCode = "404", description = "Movie session not found")})
     @GetMapping("/movieSession{id}")
@@ -48,7 +48,7 @@ public class MovieSessionController {
     }
 
     @Operation(summary = "Get all movie sessions for a specific date",
-    description = "Gets movie sessions for a specific date",
+    description = "Retrieves movie sessions for a specific date",
             responses = {@ApiResponse(responseCode = "200", description = "Movie sessions successfully returned")})
     @GetMapping("/movieSession/{date}")
     public List<MovieSession> getMovieSessionsByDate(@PathVariable("date") LocalDate date)
@@ -57,7 +57,7 @@ public class MovieSessionController {
     }
 
     @Operation(summary = "Get all movie sessions for a week",
-            description = "Gets all movie sessions for one week",
+            description = "Retrieves all movie sessions for one week",
             responses = {@ApiResponse(responseCode = "200", description = "Movie sessions successfully returned")})
     @GetMapping("/movieSessionWeek/{date}")
     public List<MovieSession> getMovieSessionsForAWeek(@PathVariable("date") LocalDate date)
@@ -90,7 +90,7 @@ public class MovieSessionController {
     }
 
     @Operation(summary = "Get all movie sessions for a specific movie",
-    description = "Gets all movie sessions for a specific movie",
+    description = "Retrieves all movie sessions for a specific movie",
             responses = {@ApiResponse(responseCode = "200", description = "Movie sessions successfully returned"),
                     @ApiResponse(responseCode = "404", description = "Movie not found")})
     @GetMapping("/movie{id}/sessions")
