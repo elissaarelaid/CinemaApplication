@@ -7,7 +7,7 @@ import net.cinemaApplication.backend.entity.user.Ticket;
 import java.util.List;
 
 public interface UserService {
-    List<Ticket> getAllTickets(Long userId);
+    List<Ticket> getAllUserTickets(Long userId);
     List<Movie> getHistory(Long userId);
     List<Movie> recommendMovies(Long userId);
     List<Ticket> buyMovieTickets(Long sessionId, Long userId, int ticketAmount);

@@ -244,6 +244,7 @@ public class MovieSessionServiceImplementation implements MovieSessionService {
         return savedMovieSession;
     }
 
+
     /**
      * Gets all movie sessions for specific date and specific movie (it filters according to start date)
      * @param date to get movie sessions about
