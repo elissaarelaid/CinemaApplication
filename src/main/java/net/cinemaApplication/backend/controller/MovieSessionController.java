@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 @Tag(name = "Movie session", description = "Operations related to movie sessions in the cinema systme")
 public class MovieSessionController {
     @Autowired

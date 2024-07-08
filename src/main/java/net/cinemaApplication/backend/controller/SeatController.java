@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 @Tag(name = "Seat", description = "Operations related to seats in the cinema system")
 public class SeatController {
     @Autowired

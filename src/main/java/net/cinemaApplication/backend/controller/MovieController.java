@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 @RestController
+@RequestMapping("/api")
 @Tag(name = "Movie", description = "Operations related to movies in the cinema system")
 public class MovieController {
     @Autowired private MovieService movieService;

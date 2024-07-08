@@ -7,16 +7,14 @@ import net.cinemaApplication.backend.entity.user.Ticket;
 import net.cinemaApplication.backend.service.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 @Tag(name = "Ticket", description = "Operations related to tickets in the cinema system")
 public class TicketController {
     @Autowired
